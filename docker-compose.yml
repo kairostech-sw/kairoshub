@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   kairoshome:
-    container_name: kairoshome_202203
+    container_name: kairoshub
     image: kairoshub:2021.11
     volumes:
       - /home/pi/workspace/kairoshub/hassio/configuration.yaml:/config/configuration.yaml
