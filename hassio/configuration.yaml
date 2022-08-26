@@ -1215,15 +1215,15 @@ automation:
           topic: 'kairostech/command'
           payload: 'ASSISTANCE_STOP'
 
-  - alias: OTA UPDATE
+  - alias: OTA UPDATE CHECK
     trigger: 
       - platform: time_pattern
-        hours: "/5"
+        hours: "/23"
     action:
       - service: mqtt.publish
         data_template: 
           topic: 'kairostech/command'
-          payload: 'TEST_OTA_UPDATE_FREQ' 
+          payload: 'KAIROSHUB_RELEASE_CHECK' 
 
 #### logger configuration
 logger:
