@@ -1245,12 +1245,6 @@ automation:
         data_template: 
           topic: 'kairostech/command'
           payload: 'KAIROSHUB_RELEASE_CHECK' 
-  - alias: SYSTEM METRICS
-    trigger:
-      platform: time_pattern
-      minutes: "/30"
-    action:
-      - event: AD_SYSTEM_METRICS
 
 #### logger configuration
 logger:
