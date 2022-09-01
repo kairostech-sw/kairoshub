@@ -808,15 +808,36 @@ sensor:
     resources:
       - type: disk_use_percent
       - type: memory_use_percent
-      - type: swap_use_percent
-      - type: load_1m
-      - type: load_5m
-      - type: load_15m
-      - type: ipv4_address
-        arg: wlan0
       - type: processor_use
       - type: processor_temperature
       - type: last_boot
+  #endregion
+
+  #region platform STATISTICS
+  - platform: statistics
+    name: "stat memory_use"
+    entity_id: sensor.memory_use_percent
+    sampling_size: 30
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat disk_use"
+    entity_id: sensor.disk_use_percent
+    sampling_size: 30
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat processor_use"
+    entity_id: sensor.processor_use
+    sampling_size: 75
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat processor_temperature"
+    entity_id: sensor.processor_temperature
+    sampling_size: 100
+    max_age: 
+      minutes: 30
   #endregion
 
 #endregion SENSOR
@@ -1224,6 +1245,12 @@ automation:
         data_template: 
           topic: 'kairostech/command'
           payload: 'KAIROSHUB_RELEASE_CHECK' 
+  - alias: SYSTEM METRICS
+    trigger:
+      platform: time_pattern
+      minutes: "/30"
+    action:
+      - event: AD_SYSTEM_METRICS
 
 #### logger configuration
 logger:
