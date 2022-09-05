@@ -1274,6 +1274,13 @@ automation:
     action:
       event: "AD_SETTINGS_REMOTE_RESTORE_REQUEST"
 
+  - alias: USER SETTINGS SYNCH
+    trigger:
+      - platform: time
+        at: "00:00:00"
+    action:
+      event: "AD_SETTINGS_SYNCH"
+
 #### logger configuration
 logger:
   default: info
