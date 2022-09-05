@@ -67,6 +67,22 @@ input_number:
     min: 18
     max: 30
     step: 0.5
+  rollershutter_athome_position:
+    min: 0
+    max: 100
+    step: 5
+    initial: 100
+    mode: slider
+    name: "Posizione In Casa"
+    icon: 'mdi:window-shutter'
+  rollershutter_notathome_position:
+    min: 0
+    max: 100
+    step: 5
+    initial: 0
+    mode: slider
+    name: "Posizione Fuori Casa"
+    icon: 'mdi:window-shutter'
     
 ##### datetime entities
 input_datetime:
@@ -983,6 +999,14 @@ group:
       - cover.rs04
       - cover.rs05
       - cover.rs06
+  kairoshub_settings:
+    name: Impostazioni
+    entities:
+      - input_number.rollershutter_athome_position
+      - input_number.rollershutter_notathome_position
+  kairoshub_functionalities:
+    name: Funzionalità
+    entities:
 
 #### include kairos core automations
 automation kairos: !include_dir_merge_list hakairos-configuration/automations/
@@ -1245,6 +1269,10 @@ automation:
         data_template: 
           topic: 'kairostech/command'
           payload: 'KAIROSHUB_RELEASE_CHECK' 
+  
+  - alias: USER SETTINGS REMOTE RESTORE REQUEST
+    action:
+      event: "AD_SETTINGS_REMOTE_RESTORE_REQUEST"
 
 #### logger configuration
 logger:
