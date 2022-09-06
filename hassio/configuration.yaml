@@ -1270,16 +1270,17 @@ automation:
           topic: 'kairostech/command'
           payload: 'KAIROSHUB_RELEASE_CHECK' 
   
-  - alias: USER SETTINGS REMOTE RESTORE REQUEST
-    action:
-      event: "AD_SETTINGS_REMOTE_RESTORE_REQUEST"
-
-  - alias: USER SETTINGS SYNCH
+  - alias: SYNC SETTINGS
     trigger:
       - platform: time
         at: "00:00:00"
     action:
-      event: "AD_SETTINGS_SYNCH"
+      event: "AD_SETTINGS_SYNC"
+
+  - alias: RESTORE SETTINGS
+    trigger:
+    action:
+      event: "AD_SETTINGS_RESTORE"
 
 #### logger configuration
 logger:
