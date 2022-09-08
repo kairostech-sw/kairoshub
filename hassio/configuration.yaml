@@ -354,19 +354,61 @@ input_boolean:
     name: Programma 3
   heater_program4:
     name: Programma 4
-  thermostat_monday:
+  thermostat_monday_program1:
     name: Lunedì
-  thermostat_tuesday:
+  thermostat_monday_program2:
+    name: Lunedì
+  thermostat_monday_program3:
+    name: Lunedì
+  thermostat_monday_program4:
+    name: Lunedì
+  thermostat_tuesday_program1:
     name: Martedì
-  thermostat_wednesday:
+  thermostat_tuesday_program2:
+    name: Martedì
+  thermostat_tuesday_program3:
+    name: Martedì
+  thermostat_tuesday_program4:
+    name: Martedì
+  thermostat_wednesday_program1:
     name: Mercoledì
-  thermostat_thursday:
+  thermostat_wednesday_program2:
+    name: Mercoledì
+  thermostat_wednesday_program3:
+    name: Mercoledì
+  thermostat_wednesday_program4:
+    name: Mercoledì
+  thermostat_thursday_program1:
     name: Giovedì
-  thermostat_friday:
+  thermostat_thursday_program2:
+    name: Giovedì
+  thermostat_thursday_program3:
+    name: Giovedì
+  thermostat_thursday_program4:
+    name: Giovedì
+  thermostat_friday_program1:
     name: Venerdì
-  thermostat_saturday:
+  thermostat_friday_program2:
+    name: Venerdì
+  thermostat_friday_program3:
+    name: Venerdì
+  thermostat_friday_program4:
+    name: Venerdì
+  thermostat_saturday_program1:
     name: Sabato
-  thermostat_sunday:
+  thermostat_saturday_program2:
+    name: Sabato
+  thermostat_saturday_program3:
+    name: Sabato
+  thermostat_saturday_program4:
+    name: Sabato
+  thermostat_sunday_program1:
+    name: Domenica
+  thermostat_sunday_program2:
+    name: Domenica
+  thermostat_sunday_program3:
+    name: Domenica
+  thermostat_sunday_program4:
     name: Domenica
   tv_01:
     name: Ambiente 1
@@ -865,7 +907,7 @@ binary_sensor:
       heater_auto:
         friendly_name: "Programma caldo"
         value_template: >-
-          {% if is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program3', 'on') or is_state('input_boolean.heater_program4', 'on') %}
+          {% if is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program2', 'on') or is_state('input_boolean.heater_program3', 'on') or is_state('input_boolean.heater_program4', 'on') %}
             on
           {% else %}
             off
