@@ -83,6 +83,14 @@ input_number:
     mode: slider
     name: "Posizione Fuori Casa"
     icon: 'mdi:window-shutter'
+  manual_heating_temp:
+    min: 4
+    max: 31
+    step: 1
+    initial: 31
+    mode: slider
+    name: "Temperatura Per Riscaldamento Manuale"
+    icon: 'mdi:thermometer'
     
 ##### datetime entities
 input_datetime:
@@ -354,6 +362,14 @@ input_boolean:
     name: Programma 3
   heater_program4:
     name: Programma 4
+  heater_program1_on:
+    name: Programma 1 Attivo
+  heater_program2_on:
+    name: Programma 2 Attivo
+  heater_program3_on:
+    name: Programma 3 Attivo
+  heater_program4_on:
+    name: Programma 4 Attivo
   thermostat_monday_program1:
     name: Lunedì
   thermostat_monday_program2:
@@ -530,7 +546,6 @@ sensor:
   - name: TV01_lastupdate
     platform: mqtt
     state_topic: "shellies/TV01/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -562,7 +577,6 @@ sensor:
   - name: TV02_lastupdate
     platform: mqtt
     state_topic: "shellies/TV02/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -594,7 +608,6 @@ sensor:
   - name: TV03_lastupdate
     platform: mqtt
     state_topic: "shellies/TV03/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -626,7 +639,6 @@ sensor:
   - name: TV04_lastupdate
     platform: mqtt
     state_topic: "shellies/TV04/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -658,7 +670,6 @@ sensor:
   - name: TV05_lastupdate
     platform: mqtt
     state_topic: "shellies/TV05/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -690,7 +701,6 @@ sensor:
   - name: TV06_lastupdate
     platform: mqtt
     state_topic: "shellies/TV06/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
   
@@ -722,7 +732,6 @@ sensor:
   - name: TV07_lastupdate
     platform: mqtt
     state_topic: "shellies/TV07/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
  
@@ -861,7 +870,7 @@ sensor:
     round: 2
   #endregion
 
-  #region SENSOR SYSTEMMONITOR (to be tested)
+  #region SENSOR SYSTEMMONITOR
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
@@ -1046,9 +1055,25 @@ group:
     entities:
       - input_number.rollershutter_athome_position
       - input_number.rollershutter_notathome_position
+      - input_number.manual_heating_temp
   kairoshub_functionalities:
     name: Funzionalità
     entities:
+  heating_valves:
+    name: Valvole Riscaldamento
+    entities:
+      - sensor.tv01_temp
+      - sensor.tv02_temp
+      - sensor.tv03_temp
+      - sensor.tv04_temp
+      - sensor.tv05_temp
+      - sensor.tv06_temp
+      - sensor.tv07_temp
+  sensor_temperatures:
+    name: Sensori Ambiente
+    entities:
+      - sensor.dayzone_temperature_0
+
 
 #### include kairos core automations
 automation kairos: !include_dir_merge_list hakairos-configuration/automations/
@@ -1117,10 +1142,19 @@ automation:
         - condition: state
           entity_id: switch.sw_thermostat
           state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
+          state: 'off'
     action: 
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 1
+          program: prog1
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period1')}}"
@@ -1158,11 +1192,20 @@ automation:
         - condition: state
           entity_id: switch.sw_thermostat
           state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
+          state: 'off'
     action: 
       - delay: "00:00:10"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 2
+          program: prog2
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period2')}}"
@@ -1200,11 +1243,20 @@ automation:
         - condition: state
           entity_id: switch.sw_thermostat
           state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
+          state: 'off'
     action: 
-      - delay: "00:00:20"
+      - delay: "00:00:30"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 3
+          program: prog3
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period3')}}"
@@ -1242,11 +1294,20 @@ automation:
         - condition: state
           entity_id: switch.sw_thermostat
           state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
     action: 
-      - delay: "00:00:20"
+      - delay: "00:00:40"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 4
+          program: prog4
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period4')}}"
@@ -1323,6 +1384,13 @@ automation:
     trigger:
     action:
       event: "AD_SETTINGS_RESTORE"
+  
+  - alias: RISCALDAMENTO
+    trigger:
+    action:
+      - event: AD_HEATING
+        event_data: 
+          program : manual
 
 #### logger configuration
 logger:
