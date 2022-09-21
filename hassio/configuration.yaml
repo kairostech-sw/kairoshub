@@ -84,9 +84,9 @@ input_number:
     name: "Posizione Fuori Casa"
     icon: 'mdi:window-shutter'
   manual_heating_temp:
-    min: 4
+    min: 18
     max: 31
-    step: 1
+    step: 0.5 
     initial: 31
     mode: slider
     name: "Temperatura Per Riscaldamento Manuale"
@@ -1254,7 +1254,7 @@ automation:
           entity_id: input_boolean.heater_program4_on
           state: 'off'
     action: 
-      - delay: "00:00:30"
+      - delay: "00:00:20"
       - event: HA_MANAGE_HEATER 
         event_data: 
           program: prog3
@@ -1305,7 +1305,7 @@ automation:
           entity_id: input_boolean.heater_program3_on
           state: 'off'
     action: 
-      - delay: "00:00:40"
+      - delay: "00:00:30"
       - event: HA_MANAGE_HEATER 
         event_data: 
           program: prog4
