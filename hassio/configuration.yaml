@@ -1059,6 +1059,7 @@ group:
   kairoshub_functionalities:
     name: Funzionalità
     entities:
+      - input_boolean.kafka_integration
   heating_valves:
     name: Valvole Riscaldamento
     entities:
