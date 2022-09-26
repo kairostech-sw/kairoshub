@@ -1117,6 +1117,7 @@ automation:
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
+      - event: AD_KAIROSHUB_STARTED
   - alias: AUTOMATION_H20
     trigger: 
       - platform: time
@@ -1129,7 +1130,7 @@ automation:
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
-
+      - event: AD_KAIROSHUB_STARTED
   - alias: Prog riscaldamento 1
     trigger:
       - platform: time_pattern
