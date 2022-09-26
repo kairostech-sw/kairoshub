@@ -440,6 +440,8 @@ input_boolean:
     name: Ambiente 6
   tv_07:
     name: Ambiente 7
+  sw_thermostat_frontend:
+    name: frontend thermostat
 
 #thermostat
 # Example configuration.yaml entry
@@ -1142,9 +1144,6 @@ automation:
           entity_id: input_boolean.heater_program1
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
-          state: 'off'
-        - condition: state
           entity_id: input_boolean.heater_program2_on
           state: 'off'
         - condition: state
@@ -1191,9 +1190,6 @@ automation:
         - condition: state
           entity_id: input_boolean.heater_program2
           state: 'on'
-        - condition: state
-          entity_id: switch.sw_thermostat
-          state: 'off'
         - condition: state
           entity_id: input_boolean.heater_program1_on
           state: 'off'
@@ -1243,9 +1239,6 @@ automation:
           entity_id: input_boolean.heater_program3
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
-          state: 'off'
-        - condition: state
           entity_id: input_boolean.heater_program1_on
           state: 'off'
         - condition: state
@@ -1293,9 +1286,6 @@ automation:
         - condition: state
           entity_id: input_boolean.heater_program4
           state: 'on'
-        - condition: state
-          entity_id: switch.sw_thermostat
-          state: 'off'
         - condition: state
           entity_id: input_boolean.heater_program1_on
           state: 'off'
