@@ -1325,6 +1325,22 @@ automation:
             on_time: "{{states('input_datetime.thermostat_sunday_on_period4')}}"
             off_time: "{{states('input_datetime.thermostat_sunday_off_period4')}}"
 
+  - alias: Spegnimento Programma
+    trigger:
+      - platform: state
+        entity_id: input_boolean.heater_program1
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program2
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program3
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program4
+        to: 'off'
+    action:
+      - event: AD_PROGRAM_OFF
   - alias: Richiesta assistenza
     trigger: 
       - platform: state
