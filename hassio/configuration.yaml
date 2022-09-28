@@ -939,7 +939,6 @@ cover:
     command_topic: "shellies/RS01/roller/0/command"
     position_topic: "shellies/RS01/roller/0/pos"
     set_position_topic: "shellies/RS01/roller/0/command/pos"
-    availability_topic: "shellies/RS01/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -956,7 +955,6 @@ cover:
     command_topic: "shellies/RS02/roller/0/command"
     position_topic: "shellies/RS02/roller/0/pos"
     set_position_topic: "shellies/RS02/roller/0/command/pos"
-    availability_topic: "shellies/RS02/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -973,7 +971,6 @@ cover:
     command_topic: "shellies/RS03/roller/0/command"
     position_topic: "shellies/RS03/roller/0/pos"
     set_position_topic: "shellies/RS03/roller/0/command/pos"
-    availability_topic: "shellies/RS03/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -990,7 +987,6 @@ cover:
     command_topic: "shellies/RS04/roller/0/command"
     position_topic: "shellies/RS04/roller/0/pos"
     set_position_topic: "shellies/RS04/roller/0/command/pos"
-    availability_topic: "shellies/RS04/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -1007,7 +1003,6 @@ cover:
     command_topic: "shellies/RS05/roller/0/command"
     position_topic: "shellies/RS05/roller/0/pos"
     set_position_topic: "shellies/RS05/roller/0/command/pos"
-    availability_topic: "shellies/RS05/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -1024,7 +1019,6 @@ cover:
     command_topic: "shellies/RS06/roller/0/command"
     position_topic: "shellies/RS06/roller/0/pos"
     set_position_topic: "shellies/RS06/roller/0/command/pos"
-    availability_topic: "shellies/RS06/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
