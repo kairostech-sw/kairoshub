@@ -67,6 +67,30 @@ input_number:
     min: 18
     max: 30
     step: 0.5
+  rollershutter_athome_position:
+    min: 0
+    max: 100
+    step: 5
+    initial: 100
+    mode: slider
+    name: "Posizione In Casa"
+    icon: 'mdi:window-shutter'
+  rollershutter_notathome_position:
+    min: 0
+    max: 100
+    step: 5
+    initial: 0
+    mode: slider
+    name: "Posizione Fuori Casa"
+    icon: 'mdi:window-shutter'
+  manual_heating_temp:
+    min: 18
+    max: 31
+    step: 0.5 
+    initial: 31
+    mode: slider
+    name: "Temperatura Per Riscaldamento Manuale"
+    icon: 'mdi:thermometer'
     
 ##### datetime entities
 input_datetime:
@@ -338,19 +362,69 @@ input_boolean:
     name: Programma 3
   heater_program4:
     name: Programma 4
-  thermostat_monday:
+  heater_program1_on:
+    name: Programma 1 Attivo
+  heater_program2_on:
+    name: Programma 2 Attivo
+  heater_program3_on:
+    name: Programma 3 Attivo
+  heater_program4_on:
+    name: Programma 4 Attivo
+  thermostat_monday_program1:
     name: Lunedì
-  thermostat_tuesday:
+  thermostat_monday_program2:
+    name: Lunedì
+  thermostat_monday_program3:
+    name: Lunedì
+  thermostat_monday_program4:
+    name: Lunedì
+  thermostat_tuesday_program1:
     name: Martedì
-  thermostat_wednesday:
+  thermostat_tuesday_program2:
+    name: Martedì
+  thermostat_tuesday_program3:
+    name: Martedì
+  thermostat_tuesday_program4:
+    name: Martedì
+  thermostat_wednesday_program1:
     name: Mercoledì
-  thermostat_thursday:
+  thermostat_wednesday_program2:
+    name: Mercoledì
+  thermostat_wednesday_program3:
+    name: Mercoledì
+  thermostat_wednesday_program4:
+    name: Mercoledì
+  thermostat_thursday_program1:
     name: Giovedì
-  thermostat_friday:
+  thermostat_thursday_program2:
+    name: Giovedì
+  thermostat_thursday_program3:
+    name: Giovedì
+  thermostat_thursday_program4:
+    name: Giovedì
+  thermostat_friday_program1:
     name: Venerdì
-  thermostat_saturday:
+  thermostat_friday_program2:
+    name: Venerdì
+  thermostat_friday_program3:
+    name: Venerdì
+  thermostat_friday_program4:
+    name: Venerdì
+  thermostat_saturday_program1:
     name: Sabato
-  thermostat_sunday:
+  thermostat_saturday_program2:
+    name: Sabato
+  thermostat_saturday_program3:
+    name: Sabato
+  thermostat_saturday_program4:
+    name: Sabato
+  thermostat_sunday_program1:
+    name: Domenica
+  thermostat_sunday_program2:
+    name: Domenica
+  thermostat_sunday_program3:
+    name: Domenica
+  thermostat_sunday_program4:
     name: Domenica
   tv_01:
     name: Ambiente 1
@@ -366,6 +440,8 @@ input_boolean:
     name: Ambiente 6
   tv_07:
     name: Ambiente 7
+  sw_thermostat_frontend:
+    name: frontend thermostat
 
 #thermostat
 # Example configuration.yaml entry
@@ -472,7 +548,6 @@ sensor:
   - name: TV01_lastupdate
     platform: mqtt
     state_topic: "shellies/TV01/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -504,7 +579,6 @@ sensor:
   - name: TV02_lastupdate
     platform: mqtt
     state_topic: "shellies/TV02/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -536,7 +610,6 @@ sensor:
   - name: TV03_lastupdate
     platform: mqtt
     state_topic: "shellies/TV03/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -568,7 +641,6 @@ sensor:
   - name: TV04_lastupdate
     platform: mqtt
     state_topic: "shellies/TV04/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -600,7 +672,6 @@ sensor:
   - name: TV05_lastupdate
     platform: mqtt
     state_topic: "shellies/TV05/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
 
@@ -632,7 +703,6 @@ sensor:
   - name: TV06_lastupdate
     platform: mqtt
     state_topic: "shellies/TV06/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
   
@@ -664,7 +734,6 @@ sensor:
   - name: TV07_lastupdate
     platform: mqtt
     state_topic: "shellies/TV07/info"
-    unit_of_measurement: "°C"
     value_template: "{{ value_json.time }}"
     payload_not_available: "offline"
  
@@ -803,20 +872,41 @@ sensor:
     round: 2
   #endregion
 
-  #region SENSOR SYSTEMMONITOR (to be tested)
+  #region SENSOR SYSTEMMONITOR
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
       - type: memory_use_percent
-      - type: swap_use_percent
-      - type: load_1m
-      - type: load_5m
-      - type: load_15m
-      - type: ipv4_address
-        arg: wlan0
       - type: processor_use
       - type: processor_temperature
       - type: last_boot
+  #endregion
+
+  #region platform STATISTICS
+  - platform: statistics
+    name: "stat memory_use"
+    entity_id: sensor.memory_use_percent
+    sampling_size: 30
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat disk_use"
+    entity_id: sensor.disk_use_percent
+    sampling_size: 30
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat processor_use"
+    entity_id: sensor.processor_use
+    sampling_size: 75
+    max_age: 
+      minutes: 30
+  - platform: statistics
+    name: "stat processor_temperature"
+    entity_id: sensor.processor_temperature
+    sampling_size: 100
+    max_age: 
+      minutes: 30
   #endregion
 
 #endregion SENSOR
@@ -828,7 +918,7 @@ binary_sensor:
       heater_auto:
         friendly_name: "Programma caldo"
         value_template: >-
-          {% if is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program3', 'on') or is_state('input_boolean.heater_program4', 'on') %}
+          {% if is_state('input_boolean.heater_program1', 'on') or is_state('input_boolean.heater_program2', 'on') or is_state('input_boolean.heater_program3', 'on') or is_state('input_boolean.heater_program4', 'on') %}
             on
           {% else %}
             off
@@ -849,7 +939,6 @@ cover:
     command_topic: "shellies/RS01/roller/0/command"
     position_topic: "shellies/RS01/roller/0/pos"
     set_position_topic: "shellies/RS01/roller/0/command/pos"
-    availability_topic: "shellies/RS01/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -866,7 +955,6 @@ cover:
     command_topic: "shellies/RS02/roller/0/command"
     position_topic: "shellies/RS02/roller/0/pos"
     set_position_topic: "shellies/RS02/roller/0/command/pos"
-    availability_topic: "shellies/RS02/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -883,7 +971,6 @@ cover:
     command_topic: "shellies/RS03/roller/0/command"
     position_topic: "shellies/RS03/roller/0/pos"
     set_position_topic: "shellies/RS03/roller/0/command/pos"
-    availability_topic: "shellies/RS03/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -900,7 +987,6 @@ cover:
     command_topic: "shellies/RS04/roller/0/command"
     position_topic: "shellies/RS04/roller/0/pos"
     set_position_topic: "shellies/RS04/roller/0/command/pos"
-    availability_topic: "shellies/RS04/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -917,7 +1003,6 @@ cover:
     command_topic: "shellies/RS05/roller/0/command"
     position_topic: "shellies/RS05/roller/0/pos"
     set_position_topic: "shellies/RS05/roller/0/command/pos"
-    availability_topic: "shellies/RS05/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -934,7 +1019,6 @@ cover:
     command_topic: "shellies/RS06/roller/0/command"
     position_topic: "shellies/RS06/roller/0/pos"
     set_position_topic: "shellies/RS06/roller/0/command/pos"
-    availability_topic: "shellies/RS06/online"
     payload_available: "true"
     payload_not_available: "false"
     retain: false
@@ -962,6 +1046,31 @@ group:
       - cover.rs04
       - cover.rs05
       - cover.rs06
+  kairoshub_settings:
+    name: Impostazioni
+    entities:
+      - input_number.rollershutter_athome_position
+      - input_number.rollershutter_notathome_position
+      - input_number.manual_heating_temp
+  kairoshub_functionalities:
+    name: Funzionalità
+    entities:
+      - input_boolean.kafka_integration
+  heating_valves:
+    name: Valvole Riscaldamento
+    entities:
+      - sensor.tv01_temp
+      - sensor.tv02_temp
+      - sensor.tv03_temp
+      - sensor.tv04_temp
+      - sensor.tv05_temp
+      - sensor.tv06_temp
+      - sensor.tv07_temp
+  sensor_temperatures:
+    name: Sensori Ambiente
+    entities:
+      - sensor.dayzone_temperature_0
+
 
 #### include kairos core automations
 automation kairos: !include_dir_merge_list hakairos-configuration/automations/
@@ -1004,6 +1113,7 @@ automation:
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
+      - event: AD_KAIROSHUB_STARTED
   - alias: AUTOMATION_H20
     trigger: 
       - platform: time
@@ -1016,11 +1126,11 @@ automation:
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
-
+      - event: AD_KAIROSHUB_STARTED
   - alias: Prog riscaldamento 1
     trigger:
       - platform: time_pattern
-        minutes: /1
+        minutes: /5
     condition: 
       condition: and
       conditions: 
@@ -1028,12 +1138,18 @@ automation:
           entity_id: input_boolean.heater_program1
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
           state: 'off'
     action: 
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 1
+          program: prog1
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period1')}}"
@@ -1061,7 +1177,7 @@ automation:
   - alias: Prog riscaldamento 2
     trigger:
       - platform: time_pattern
-        minutes: /1
+        minutes: /5
     condition: 
       condition: and
       conditions: 
@@ -1069,13 +1185,19 @@ automation:
           entity_id: input_boolean.heater_program2
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
           state: 'off'
     action: 
       - delay: "00:00:10"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 2
+          program: prog2
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period2')}}"
@@ -1103,7 +1225,7 @@ automation:
   - alias: Prog riscaldamento 3
     trigger:
       - platform: time_pattern
-        minutes: /1
+        minutes: /5
     condition: 
       condition: and
       conditions: 
@@ -1111,13 +1233,19 @@ automation:
           entity_id: input_boolean.heater_program3
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
           state: 'off'
     action: 
       - delay: "00:00:20"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 3
+          program: prog3
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period3')}}"
@@ -1145,7 +1273,7 @@ automation:
   - alias: Prog riscaldamento 4
     trigger:
       - platform: time_pattern
-        minutes: /1
+        minutes: /5
     condition: 
       condition: and
       conditions: 
@@ -1153,13 +1281,19 @@ automation:
           entity_id: input_boolean.heater_program4
           state: 'on'
         - condition: state
-          entity_id: switch.sw_thermostat
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
           state: 'off'
     action: 
-      - delay: "00:00:20"
+      - delay: "00:00:30"
       - event: HA_MANAGE_HEATER 
         event_data: 
-          program: 4
+          program: prog4
           temperature: "{{states('sensor.temperatura')}}"
           on_off_heater: "{{states('switch.sw_thermostat')}}"
           target_temp: "{{states('input_number.temperature_period4')}}"
@@ -1184,6 +1318,23 @@ automation:
           on_off_time_sunday:
             on_time: "{{states('input_datetime.thermostat_sunday_on_period4')}}"
             off_time: "{{states('input_datetime.thermostat_sunday_off_period4')}}"
+
+  - alias: Spegnimento Programma
+    trigger:
+      - platform: state
+        entity_id: input_boolean.heater_program1
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program2
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program3
+        to: 'off'
+      - platform: state
+        entity_id: input_boolean.heater_program4
+        to: 'off'
+    action:
+      - event: AD_PROGRAM_OFF
 
   - alias: Richiesta assistenza
     trigger: 
@@ -1224,6 +1375,81 @@ automation:
         data_template: 
           topic: 'kairostech/command'
           payload: 'KAIROSHUB_RELEASE_CHECK' 
+  
+  - alias: SYNC SETTINGS
+    trigger:
+      - platform: time
+        at: "00:00:00"
+    action:
+      event: "AD_SETTINGS_SYNC"
+
+  - alias: RESTORE SETTINGS
+    trigger:
+    action:
+      event: "AD_SETTINGS_RESTORE"
+  
+  - alias: RISCALDAMENTO
+    trigger:
+    action:
+      - event: AD_HEATING
+        event_data: 
+            program : prog0
+  - alias: SPEGNIMENTO RISCALDAMENTO MANUALE
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.temperatura
+        above: input_number.manual_heating_temp
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: switch.sw_thermostat
+          state: "on"
+        - condition: state
+          entity_id: input_boolean.heater_program1_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program2_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program3_on
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.heater_program4_on
+          state: 'off'
+    action:
+      - event: AD_PROGRAM_OFF
+        event_data:
+          program: prog0
+  - alias: LOW BATTERY NOTIFICATION
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.TV01_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV02_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV03_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV04_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV05_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV06_battery
+        below: 25
+      - platform: numeric_state
+        entity_id: sensor.TV07_battery
+        below: 25
+    action:
+      - event: AD_KAIROSHUB_NOTIFICATION
+        event_data:
+          type: alert
+          ncode: HEATING_SENSOR_BATTERY_LOW
+          entity: "{{trigger.entity_id}}"
 
 #### logger configuration
 logger:
