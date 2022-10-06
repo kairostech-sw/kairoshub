@@ -1449,7 +1449,7 @@ automation:
         event_data:
           type: alert
           ncode: HEATING_SENSOR_BATTERY_LOW
-          entity: "{{trigger.entity_id}}
+          entity: "{{trigger.entity_id}}"
 
 #### logger configuration
 logger:
