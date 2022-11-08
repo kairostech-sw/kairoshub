@@ -562,7 +562,7 @@ sensor:
   - name: TV01_lastupdate
     platform: mqtt
     state_topic: "shellies/TV01/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV02
@@ -593,7 +593,7 @@ sensor:
   - name: TV02_lastupdate
     platform: mqtt
     state_topic: "shellies/TV02/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV03
@@ -624,7 +624,7 @@ sensor:
   - name: TV03_lastupdate
     platform: mqtt
     state_topic: "shellies/TV03/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV04
@@ -655,7 +655,7 @@ sensor:
   - name: TV04_lastupdate
     platform: mqtt
     state_topic: "shellies/TV04/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV05
@@ -686,7 +686,7 @@ sensor:
   - name: TV05_lastupdate
     platform: mqtt
     state_topic: "shellies/TV05/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV06
@@ -717,7 +717,7 @@ sensor:
   - name: TV06_lastupdate
     platform: mqtt
     state_topic: "shellies/TV06/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV07
@@ -748,7 +748,7 @@ sensor:
   - name: TV07_lastupdate
     platform: mqtt
     state_topic: "shellies/TV07/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #shelly EM
