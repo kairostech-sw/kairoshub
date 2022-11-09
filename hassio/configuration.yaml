@@ -488,6 +488,14 @@ sensor:
     platform: mqtt
     state_topic: "kairostech/state"
 
+  - name: system_exchange_services_state:
+    platform: mqtt
+    state_topic: "kairostech/system/exchange_service"
+  
+  - name: system_exchange_services_last_check:
+    platform: mqtt
+    state_topic: "kairostech/system/exchange_service/lastcheck"
+
   - name: system_state_detail
     platform: mqtt
     state_topic: "kairostech/state/detail"
@@ -1165,7 +1173,7 @@ automation:
     action:
       - event: HA_MANAGE_HEATER
         event_data:
-         data:
+          data:
             event:
               eventType: HA_MANAGE_HEATER
               sender: HUB
@@ -1218,7 +1226,7 @@ automation:
       - delay: "00:00:10"
       - event: HA_MANAGE_HEATER
         event_data:
-         data:
+          data:
             event:
               eventType: HA_MANAGE_HEATER
               sender: HUB
@@ -1271,7 +1279,7 @@ automation:
       - delay: "00:00:20"
       - event: HA_MANAGE_HEATER
         event_data:
-         data:
+          data:
             event:
               eventType: HA_MANAGE_HEATER
               sender: HUB
@@ -1324,7 +1332,7 @@ automation:
       - delay: "00:00:30"
       - event: HA_MANAGE_HEATER
         event_data:
-         data:
+          data:
             event:
               eventType: HA_MANAGE_HEATER
               sender: HUB
@@ -1379,7 +1387,7 @@ automation:
         to: "on"
         for: "00:00:10"
       - platform: event
-        event_type: systemAssistanceOnCommand
+        event_type: HA_ASSSISTANCE_ON
     action:
       - service: mqtt.publish
         data_template:
@@ -1394,7 +1402,7 @@ automation:
         to: "off"
         for: "00:00:10"
       - platform: event
-        event_type: systemAssistanceOffCommand
+        event_type: HA_ASSSISTANCE_OFF
     action:
       - service: mqtt.publish
         data_template:
@@ -1492,12 +1500,42 @@ automation:
           ncode: HEATING_SENSOR_BATTERY_LOW
           entity: "{{trigger.entity_id}}"
 
+  - alias: SYSTEM EXCHANGE CHECK
+    trigger:
+      - platform: time_pattern
+        minutes: "/5"
+    action:
+      - service: mqtt.publish
+        data_template:
+          topic: "kairostech/command"
+          payload: "KAIROSHUB_SYSTEM_EXCHANGE_CHECK"
+      - delay: "00:00:30"
+      - condition:
+        alias: "checking last update timestamp of a sensor"
+        condition: template
+        value_template: {{ '(as_timestamp(now())-as_timestamp(states.sensor.system_exchange_services_last_check.last_updated)) > 600' }}
+      - service: mqtt.publish
+        data_template:
+          topic: "kairostech/system/exchange_service"
+          payload: "OFFLINE"
+          retain: true
+      - event: INBOUND_EVENT
+        event_data:
+          data:
+            eventType: SERVICE_EXCHANGE_RESTART_REQUEST
+
+value_template: >-
+  {{
+  (as_timestamp(now())-as_timestamp(trigger.from_state.last_changed))
+  > 3 }}
+
+
 #### logger configuration
 logger:
   default: info
   logs:
-    homeassistant.components.cloud: debug
-    custom_components.hakafka: debug
+    homeassistant.components.cloud: info
+    custom_components.hakafka: info
     custom_components.ha-custom-events: info
 
 shell_command:
