@@ -1472,22 +1472,6 @@ automation:
           ncode: HEATING_SENSOR_BATTERY_LOW
           entity: "{{trigger.entity_id}}"
 
-  - alias: KAIROSHUB AUTOCONFIGURATION
-    trigger:
-      - platform: state
-        entity_id: sensor.kairoshub_system_code
-    action:
-      - service: input_text.set_value
-        target:
-          entity_id: input_text.system_code
-        data:
-          value: "{{ trigger.to_state.state }}"
-      - service: input_text.set_value
-        target:
-          entity_id: input_text.system_name
-        data:
-          value: "{{ states('sensor.kairoshub_owner') }} "
-
 #### logger configuration
 logger:
   default: info
