@@ -488,11 +488,11 @@ sensor:
     platform: mqtt
     state_topic: "kairostech/state"
 
-  - name: system_exchange_services_state:
+  - name: system_exchange_services_state
     platform: mqtt
     state_topic: "kairostech/system/exchange_service"
   
-  - name: system_exchange_services_last_check:
+  - name: system_exchange_services_last_check
     platform: mqtt
     state_topic: "kairostech/system/exchange_service/lastcheck"
 
@@ -536,6 +536,12 @@ sensor:
     platform: mqtt
     state_topic: "shellies/TH01/ext_temperature/0"
     unit_of_measurement: "°C"
+    value_template: >-
+      {% if value|int() > 100 %}
+        10
+      {% else %}
+        {{ value }}
+      {% endif %}
 
   - name: home_humidity
     platform: mqtt
@@ -1503,7 +1509,7 @@ automation:
   - alias: SYSTEM EXCHANGE CHECK
     trigger:
       - platform: time_pattern
-        minutes: "/5"
+        hours: "/1"
     action:
       - service: mqtt.publish
         data_template:
@@ -1513,22 +1519,12 @@ automation:
       - condition:
         alias: "checking last update timestamp of a sensor"
         condition: template
-        value_template: {{ '(as_timestamp(now())-as_timestamp(states.sensor.system_exchange_services_last_check.last_updated)) > 600' }}
+        value_template: "{{ (as_timestamp(now())-states.sensor.system_exchange_services_last_check.state|float()) > 600 }}"
       - service: mqtt.publish
         data_template:
           topic: "kairostech/system/exchange_service"
           payload: "OFFLINE"
           retain: true
-      - event: INBOUND_EVENT
-        event_data:
-          data:
-            eventType: SERVICE_EXCHANGE_RESTART_REQUEST
-
-value_template: >-
-  {{
-  (as_timestamp(now())-as_timestamp(trigger.from_state.last_changed))
-  > 3 }}
-
 
 #### logger configuration
 logger:
@@ -1537,7 +1533,3 @@ logger:
     homeassistant.components.cloud: info
     custom_components.hakafka: info
     custom_components.ha-custom-events: info
-
-shell_command:
-  assistance_start: "python3 ./hakairos-configuration/scripts/assistance_start.py"
-  assistance_stop: "python3 ./hakairos-configuration/scripts/assistance_stop.py"
