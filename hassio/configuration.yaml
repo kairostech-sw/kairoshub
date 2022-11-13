@@ -439,8 +439,6 @@ input_boolean:
     name: Ambiente 6
   tv_07:
     name: Ambiente 7
-  sw_thermostat_frontend:
-    name: frontend thermostat
 
 #thermostat
 # Example configuration.yaml entry
@@ -1443,7 +1441,14 @@ automation:
     trigger:
     action:
       event: "AD_SETTINGS_RESTORE"
-
+  
+  - alias: SYNC NOTIFICATION MESSAGES
+    trigger:
+      - platform: time
+        at: "00:00:00"
+    action:
+      event: "AD_NOTIFICATION_SYNC"
+  
   - alias: RISCALDAMENTO
     trigger:
     action:
