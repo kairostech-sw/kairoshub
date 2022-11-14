@@ -1382,6 +1382,8 @@ automation:
         to: "off"
     action:
       - event: AD_PROGRAM_OFF
+        event_data:
+          program: "{{ trigger.entity_id }}"
 
   - alias: Richiesta assistenza
     trigger:
