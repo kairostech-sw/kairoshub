@@ -27,8 +27,8 @@ lovelace:
       icon: mdi:help
       show_in_sidebar: true
       filename: lovelace-kairoshome.yaml
-  
-#### HA Custom Events extension 
+
+#### HA Custom Events extension
 #### including configuration files
 ha-custom-events: !include_dir_merge_named hakairos-configuration/hacustomevents/
 
@@ -40,7 +40,7 @@ hakafka: !include_dir_merge_named hakairos-configuration/hakafka/
 input_text:
   system_code:
     name: Identificativo Sistema
-  system_name: 
+  system_name:
     name: Casa
 
 ##### input number entities
@@ -74,7 +74,7 @@ input_number:
     initial: 100
     mode: slider
     name: "Posizione In Casa"
-    icon: 'mdi:window-shutter'
+    icon: "mdi:window-shutter"
   rollershutter_notathome_position:
     min: 0
     max: 100
@@ -82,20 +82,20 @@ input_number:
     initial: 0
     mode: slider
     name: "Posizione Fuori Casa"
-    icon: 'mdi:window-shutter'
+    icon: "mdi:window-shutter"
   manual_heating_temp:
     min: 18
     max: 31
-    step: 0.5 
+    step: 0.5
     initial: 31
     mode: slider
     name: "Temperatura Per Riscaldamento Manuale"
-    icon: 'mdi:thermometer'
-    
+    icon: "mdi:thermometer"
+
 ##### datetime entities
 input_datetime:
   ###############################################
-  #           Monday          
+  #           Monday
   ###############################################
   thermostat_monday_on_period1:
     name: Accensione
@@ -130,7 +130,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Tuesday          
+  #           Tuesday
   ###############################################
   thermostat_tuesday_on_period1:
     name: Accensione
@@ -165,7 +165,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Wednesday          
+  #           Wednesday
   ###############################################
   thermostat_wednesday_on_period1:
     name: Accensione
@@ -200,7 +200,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Thursday          
+  #           Thursday
   ###############################################
   thermostat_thursday_on_period1:
     name: Accensione
@@ -235,7 +235,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Friday          
+  #           Friday
   ###############################################
   thermostat_friday_on_period1:
     name: Accensione
@@ -270,7 +270,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Saturday          
+  #           Saturday
   ###############################################
   thermostat_saturday_on_period1:
     name: Accensione
@@ -305,7 +305,7 @@ input_datetime:
     has_date: false
     has_time: true
   ###############################################
-  #           Sunday          
+  #           Sunday
   ###############################################
   thermostat_sunday_on_period1:
     name: Accensione
@@ -340,8 +340,7 @@ input_datetime:
     has_date: false
     has_time: true
 
-
-##### input boolean entities 
+##### input boolean entities
 input_boolean:
   kafka_integration:
     initial: true
@@ -352,8 +351,8 @@ input_boolean:
     name: Notifiche da leggere
   at_home:
     name: In Casa
-  night: 
-    name: Notte 
+  night:
+    name: Notte
   heater_program1:
     name: Programma 1
   heater_program2:
@@ -440,8 +439,6 @@ input_boolean:
     name: Ambiente 6
   tv_07:
     name: Ambiente 7
-  sw_thermostat_frontend:
-    name: frontend thermostat
 
 #thermostat
 # Example configuration.yaml entry
@@ -469,26 +466,33 @@ switch:
     payload_off: "off"
     optimistic: false
     retain: false
-    
 
-#region SENSOR 
-sensor: 
+#region SENSOR
+sensor:
   #region platform SENSOR TIME_DATE
   - platform: time_date
     display_options:
-      - 'date_time_iso'
+      - "date_time_iso"
   - platform: time_date
     display_options:
-      - 'date'
+      - "date"
   - platform: time_date
     display_options:
-      - 'time'
-  #endregion 
+      - "time"
+  #endregion
 
   #region PLATFORM SENSOR MQTT
   - name: system_state
     platform: mqtt
     state_topic: "kairostech/state"
+
+  - name: system_exchange_services_state
+    platform: mqtt
+    state_topic: "kairostech/system/exchange_service"
+  
+  - name: system_exchange_services_last_check
+    platform: mqtt
+    state_topic: "kairostech/system/exchange_service/lastcheck"
 
   - name: system_state_detail
     platform: mqtt
@@ -510,16 +514,38 @@ sensor:
     platform: mqtt
     state_topic: "kairostech/hakairos-configuration/last_software_check"
 
+  - name: kairoshub_osversion
+    platform: mqtt
+    state_topic: "kairostech/os_version"
+
+  - name: kairoshub_hostname
+    platform: mqtt
+    state_topic: "kairostech/hostname"
+
+  - name: kairoshub_owner
+    platform: mqtt
+    state_topic: "kairostech/owner"
+
+  - name: kairoshub_system_code
+    platform: mqtt
+    state_topic: "kairostech/system_code"
+
   - name: dayzone_temperature_0
     platform: mqtt
     state_topic: "shellies/TH01/ext_temperature/0"
     unit_of_measurement: "°C"
-  
+    value_template: >-
+      {% if value|int() > 100 %}
+        10
+      {% else %}
+        {{ value }}
+      {% endif %}
+
   - name: home_humidity
     platform: mqtt
     unit_of_measurement: "%"
     state_topic: "kairostech/sensor/humidity/0"
-  
+
   #TV01
   - name: TV01_temp
     platform: mqtt
@@ -548,7 +574,7 @@ sensor:
   - name: TV01_lastupdate
     platform: mqtt
     state_topic: "shellies/TV01/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV02
@@ -579,7 +605,7 @@ sensor:
   - name: TV02_lastupdate
     platform: mqtt
     state_topic: "shellies/TV02/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV03
@@ -610,7 +636,7 @@ sensor:
   - name: TV03_lastupdate
     platform: mqtt
     state_topic: "shellies/TV03/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV04
@@ -641,7 +667,7 @@ sensor:
   - name: TV04_lastupdate
     platform: mqtt
     state_topic: "shellies/TV04/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV05
@@ -672,7 +698,7 @@ sensor:
   - name: TV05_lastupdate
     platform: mqtt
     state_topic: "shellies/TV05/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
 
   #TV06
@@ -703,9 +729,9 @@ sensor:
   - name: TV06_lastupdate
     platform: mqtt
     state_topic: "shellies/TV06/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
-  
+
   #TV07
   - name: TV07_temp
     platform: mqtt
@@ -734,20 +760,20 @@ sensor:
   - name: TV07_lastupdate
     platform: mqtt
     state_topic: "shellies/TV07/info"
-    value_template: "{{ value_json.time }}"
+    value_template: "{{ states.sensor.time.state }}"
     payload_not_available: "offline"
- 
+
   #shelly EM
   - platform: mqtt
     name: "EM_ch1"
     state_topic: "shellies/EM01/emeter/0/power"
     value_template: "{{ value }}"
-    unit_of_measurement : "Watt"
+    unit_of_measurement: "Watt"
   - platform: mqtt
     name: "EM_ch2"
     state_topic: "shellies/EM01/emeter/1/power"
     value_template: "{{ value }}"
-    unit_of_measurement : "Watt"
+    unit_of_measurement: "Watt"
 
   #endregion
 
@@ -780,57 +806,57 @@ sensor:
 
   #region platform SENSOR TEMPLATE
   - platform: template
-    sensors: 
-      tv01_state: 
+    sensors:
+      tv01_state:
         value_template: >-
           {% if (now() - states.sensor.TV01_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv02_state: 
+      tv02_state:
         value_template: >-
           {% if (now() - states.sensor.TV02_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv03_state: 
+      tv03_state:
         value_template: >-
           {% if (now() - states.sensor.TV03_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv04_state: 
+      tv04_state:
         value_template: >-
           {% if (now() - states.sensor.TV04_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv05_state: 
+      tv05_state:
         value_template: >-
           {% if (now() - states.sensor.TV05_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv06_state: 
+      tv06_state:
         value_template: >-
           {% if (now() - states.sensor.TV06_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      tv07_state: 
+      tv07_state:
         value_template: >-
           {% if (now() - states.sensor.TV07_lastupdate.last_changed).total_seconds() | round(0) > 3600 %}
             offline
           {% else %}
             online
           {% endif %}
-      th01_state: 
+      th01_state:
         value_template: >-
           {% if (now() - states.sensor.dayzone_temperature_0.last_changed).total_seconds() | round(0) > 3600 %}
             offline
@@ -851,14 +877,14 @@ sensor:
       em_assorbimento:
         friendly_name: "Assorbimento"
         value_template: '{{ (states("sensor.em_ch1")|float(default=0) + states("sensor.em_ch2")|float(default=0))|float|round(1) }}'
-        unit_of_measurement : "Watt"
+        unit_of_measurement: "Watt"
       em_consumo:
         friendly_name: "EM Consumo"
         value_template: '{{ (states("sensor.em_consumo_ch1")|float(default=0) + states("sensor.em_consumo_ch2")|float(default=0))|float|round(1) }}'
-        unit_of_measurement : "Watt"
+        unit_of_measurement: "Watt"
         icon_template: mdi:speedometer
   #endregion
-      
+
   #region SENSOR INTEGRATION (accumulatori)
   - platform: integration
     source: sensor.em_ch1
@@ -887,25 +913,25 @@ sensor:
     name: "stat memory_use"
     entity_id: sensor.memory_use_percent
     sampling_size: 30
-    max_age: 
+    max_age:
       minutes: 30
   - platform: statistics
     name: "stat disk_use"
     entity_id: sensor.disk_use_percent
     sampling_size: 30
-    max_age: 
+    max_age:
       minutes: 30
   - platform: statistics
     name: "stat processor_use"
     entity_id: sensor.processor_use
     sampling_size: 75
-    max_age: 
+    max_age:
       minutes: 30
   - platform: statistics
     name: "stat processor_temperature"
     entity_id: sensor.processor_temperature
     sampling_size: 100
-    max_age: 
+    max_age:
       minutes: 30
   #endregion
 
@@ -923,8 +949,7 @@ binary_sensor:
           {% else %}
             off
           {% endif %}
-#endregion 
-
+#endregion
 #contabilizzatori
 utility_meter:
   shelly_1pm_consumo_mensile:
@@ -1039,7 +1064,7 @@ group:
     entities:
   rolershutters:
     name: Tapparelle
-    entities: 
+    entities:
       - cover.rs01
       - cover.rs02
       - cover.rs03
@@ -1071,311 +1096,335 @@ group:
     entities:
       - sensor.dayzone_temperature_0
 
-
 #### include kairos core automations
 automation kairos: !include_dir_merge_list hakairos-configuration/automations/
 
 #### automations
-automation: 
+automation:
   - alias: HOME TO_OFF
-    trigger: 
+    trigger:
       - platform: state
         entity_id: input_boolean.at_home
-        from: 'on'
-        to: 'off'
-        for: '00:00:05'
-    action: 
+        from: "on"
+        to: "off"
+        for: "00:00:05"
+    action:
       - service: cover.close_cover
-        target: 
+        target:
           entity_id: group.rolershutters
       - event: HA_MANAGE_HOME_ON_OFF
         event_data:
           state: "{{ trigger.to_state.state }}"
+
   - alias: HOME TO_ON
-    trigger: 
+    trigger:
       - platform: state
         entity_id: input_boolean.at_home
-        from: 'off'
-        to: 'on'  
-    action: 
+        from: "off"
+        to: "on"
+    action:
       - event: HA_MANAGE_HOME_ON_OFF
         event_data:
           state: "{{ trigger.to_state.state }}"
+
   - alias: AUTOMATION_H07
-    trigger: 
+    trigger:
       - platform: time
         at: "07:00:00"
-    action: 
+    action:
       - service: input_boolean.turn_off
-        target: 
+        target:
           entity_id: input_boolean.night
       - delay: 0:10
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
       - event: AD_KAIROSHUB_STARTED
+
   - alias: AUTOMATION_H20
-    trigger: 
+    trigger:
       - platform: time
         at: "20:00:00"
-    action: 
+    action:
       - service: input_boolean.turn_on
-        target: 
+        target:
           entity_id: input_boolean.night
       - delay: 0:10
       - event: HA_MANAGE_NIGHT_ON_OFF
         event_data:
           state: "{{states('input_boolean.night')}}"
       - event: AD_KAIROSHUB_STARTED
+
   - alias: Prog riscaldamento 1
     trigger:
       - platform: time_pattern
         minutes: /5
-    condition: 
+    condition:
       condition: and
-      conditions: 
+      conditions:
         - condition: state
           entity_id: input_boolean.heater_program1
-          state: 'on'
+          state: "on"
         - condition: state
           entity_id: input_boolean.heater_program2_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program3_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program4_on
-          state: 'off'
-    action: 
-      - event: HA_MANAGE_HEATER 
-        event_data: 
-          program: prog1
-          temperature: "{{states('sensor.temperatura')}}"
-          on_off_heater: "{{states('switch.sw_thermostat')}}"
-          target_temp: "{{states('input_number.temperature_period1')}}"
-          on_off_time_monday:
-            on_time: "{{states('input_datetime.thermostat_monday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_monday_off_period1')}}"
-          on_off_time_tuesday:
-            on_time: "{{states('input_datetime.thermostat_tuesday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_tuesday_off_period1')}}"
-          on_off_time_wednesday:
-            on_time: "{{states('input_datetime.thermostat_wednesday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_wednesday_off_period1')}}"
-          on_off_time_thursday:
-            on_time: "{{states('input_datetime.thermostat_thursday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_thursday_off_period1')}}"
-          on_off_time_friday:
-            on_time: "{{states('input_datetime.thermostat_friday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_friday_off_period1')}}"
-          on_off_time_saturday:
-            on_time: "{{states('input_datetime.thermostat_saturday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_saturday_off_period1')}}"
-          on_off_time_sunday:
-            on_time: "{{states('input_datetime.thermostat_sunday_on_period1')}}"
-            off_time: "{{states('input_datetime.thermostat_sunday_off_period1')}}"
+          state: "off"
+    action:
+      - event: HA_MANAGE_HEATER
+        event_data:
+          data:
+            event:
+              eventType: HA_MANAGE_HEATER
+              sender: HUB
+            program: prog1
+            temperature: "{{states('sensor.temperatura')}}"
+            on_off_heater: "{{states('switch.sw_thermostat')}}"
+            target_temp: "{{states('input_number.temperature_period1')}}"
+            on_off_time_monday:
+              on_time: "{{states('input_datetime.thermostat_monday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_monday_off_period1')}}"
+            on_off_time_tuesday:
+              on_time: "{{states('input_datetime.thermostat_tuesday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_tuesday_off_period1')}}"
+            on_off_time_wednesday:
+              on_time: "{{states('input_datetime.thermostat_wednesday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_wednesday_off_period1')}}"
+            on_off_time_thursday:
+              on_time: "{{states('input_datetime.thermostat_thursday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_thursday_off_period1')}}"
+            on_off_time_friday:
+              on_time: "{{states('input_datetime.thermostat_friday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_friday_off_period1')}}"
+            on_off_time_saturday:
+              on_time: "{{states('input_datetime.thermostat_saturday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_saturday_off_period1')}}"
+            on_off_time_sunday:
+              on_time: "{{states('input_datetime.thermostat_sunday_on_period1')}}"
+              off_time: "{{states('input_datetime.thermostat_sunday_off_period1')}}"
+
   - alias: Prog riscaldamento 2
     trigger:
       - platform: time_pattern
         minutes: /5
-    condition: 
+    condition:
       condition: and
-      conditions: 
+      conditions:
         - condition: state
           entity_id: input_boolean.heater_program2
-          state: 'on'
+          state: "on"
         - condition: state
           entity_id: input_boolean.heater_program1_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program3_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program4_on
-          state: 'off'
-    action: 
+          state: "off"
+    action:
       - delay: "00:00:10"
-      - event: HA_MANAGE_HEATER 
-        event_data: 
-          program: prog2
-          temperature: "{{states('sensor.temperatura')}}"
-          on_off_heater: "{{states('switch.sw_thermostat')}}"
-          target_temp: "{{states('input_number.temperature_period2')}}"
-          on_off_time_monday:
-            on_time: "{{states('input_datetime.thermostat_monday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_monday_off_period2')}}"
-          on_off_time_tuesday:
-            on_time: "{{states('input_datetime.thermostat_tuesday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_tuesday_off_period2')}}"
-          on_off_time_wednesday:
-            on_time: "{{states('input_datetime.thermostat_wednesday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_wednesday_off_period2')}}"
-          on_off_time_thursday:
-            on_time: "{{states('input_datetime.thermostat_thursday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_thursday_off_period2')}}"
-          on_off_time_friday:
-            on_time: "{{states('input_datetime.thermostat_friday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_friday_off_period2')}}"
-          on_off_time_saturday:
-            on_time: "{{states('input_datetime.thermostat_saturday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_saturday_off_period2')}}"
-          on_off_time_sunday:
-            on_time: "{{states('input_datetime.thermostat_sunday_on_period2')}}"
-            off_time: "{{states('input_datetime.thermostat_sunday_off_period2')}}"
+      - event: HA_MANAGE_HEATER
+        event_data:
+          data:
+            event:
+              eventType: HA_MANAGE_HEATER
+              sender: HUB
+            program: prog2
+            temperature: "{{states('sensor.temperatura')}}"
+            on_off_heater: "{{states('switch.sw_thermostat')}}"
+            target_temp: "{{states('input_number.temperature_period2')}}"
+            on_off_time_monday:
+              on_time: "{{states('input_datetime.thermostat_monday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_monday_off_period2')}}"
+            on_off_time_tuesday:
+              on_time: "{{states('input_datetime.thermostat_tuesday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_tuesday_off_period2')}}"
+            on_off_time_wednesday:
+              on_time: "{{states('input_datetime.thermostat_wednesday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_wednesday_off_period2')}}"
+            on_off_time_thursday:
+              on_time: "{{states('input_datetime.thermostat_thursday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_thursday_off_period2')}}"
+            on_off_time_friday:
+              on_time: "{{states('input_datetime.thermostat_friday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_friday_off_period2')}}"
+            on_off_time_saturday:
+              on_time: "{{states('input_datetime.thermostat_saturday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_saturday_off_period2')}}"
+            on_off_time_sunday:
+              on_time: "{{states('input_datetime.thermostat_sunday_on_period2')}}"
+              off_time: "{{states('input_datetime.thermostat_sunday_off_period2')}}"
+
   - alias: Prog riscaldamento 3
     trigger:
       - platform: time_pattern
         minutes: /5
-    condition: 
+    condition:
       condition: and
-      conditions: 
+      conditions:
         - condition: state
           entity_id: input_boolean.heater_program3
-          state: 'on'
+          state: "on"
         - condition: state
           entity_id: input_boolean.heater_program1_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program2_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program4_on
-          state: 'off'
-    action: 
+          state: "off"
+    action:
       - delay: "00:00:20"
-      - event: HA_MANAGE_HEATER 
-        event_data: 
-          program: prog3
-          temperature: "{{states('sensor.temperatura')}}"
-          on_off_heater: "{{states('switch.sw_thermostat')}}"
-          target_temp: "{{states('input_number.temperature_period3')}}"
-          on_off_time_monday:
-            on_time: "{{states('input_datetime.thermostat_monday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_monday_off_period3')}}"
-          on_off_time_tuesday:
-            on_time: "{{states('input_datetime.thermostat_tuesday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_tuesday_off_period3')}}"
-          on_off_time_wednesday:
-            on_time: "{{states('input_datetime.thermostat_wednesday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_wednesday_off_period3')}}"
-          on_off_time_thursday:
-            on_time: "{{states('input_datetime.thermostat_thursday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_thursday_off_period3')}}"
-          on_off_time_friday:
-            on_time: "{{states('input_datetime.thermostat_friday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_friday_off_period3')}}"
-          on_off_time_saturday:
-            on_time: "{{states('input_datetime.thermostat_saturday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_saturday_off_period3')}}"
-          on_off_time_sunday:
-            on_time: "{{states('input_datetime.thermostat_sunday_on_period3')}}"
-            off_time: "{{states('input_datetime.thermostat_sunday_off_period3')}}"
+      - event: HA_MANAGE_HEATER
+        event_data:
+          data:
+            event:
+              eventType: HA_MANAGE_HEATER
+              sender: HUB
+            program: prog3
+            temperature: "{{states('sensor.temperatura')}}"
+            on_off_heater: "{{states('switch.sw_thermostat')}}"
+            target_temp: "{{states('input_number.temperature_period3')}}"
+            on_off_time_monday:
+              on_time: "{{states('input_datetime.thermostat_monday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_monday_off_period3')}}"
+            on_off_time_tuesday:
+              on_time: "{{states('input_datetime.thermostat_tuesday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_tuesday_off_period3')}}"
+            on_off_time_wednesday:
+              on_time: "{{states('input_datetime.thermostat_wednesday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_wednesday_off_period3')}}"
+            on_off_time_thursday:
+              on_time: "{{states('input_datetime.thermostat_thursday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_thursday_off_period3')}}"
+            on_off_time_friday:
+              on_time: "{{states('input_datetime.thermostat_friday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_friday_off_period3')}}"
+            on_off_time_saturday:
+              on_time: "{{states('input_datetime.thermostat_saturday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_saturday_off_period3')}}"
+            on_off_time_sunday:
+              on_time: "{{states('input_datetime.thermostat_sunday_on_period3')}}"
+              off_time: "{{states('input_datetime.thermostat_sunday_off_period3')}}"
+
   - alias: Prog riscaldamento 4
     trigger:
       - platform: time_pattern
         minutes: /5
-    condition: 
+    condition:
       condition: and
-      conditions: 
+      conditions:
         - condition: state
           entity_id: input_boolean.heater_program4
-          state: 'on'
+          state: "on"
         - condition: state
           entity_id: input_boolean.heater_program1_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program2_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program3_on
-          state: 'off'
-    action: 
+          state: "off"
+    action:
       - delay: "00:00:30"
-      - event: HA_MANAGE_HEATER 
-        event_data: 
-          program: prog4
-          temperature: "{{states('sensor.temperatura')}}"
-          on_off_heater: "{{states('switch.sw_thermostat')}}"
-          target_temp: "{{states('input_number.temperature_period4')}}"
-          on_off_time_monday:
-            on_time: "{{states('input_datetime.thermostat_monday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_monday_off_period4')}}"
-          on_off_time_tuesday:
-            on_time: "{{states('input_datetime.thermostat_tuesday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_tuesday_off_period4')}}"
-          on_off_time_wednesday:
-            on_time: "{{states('input_datetime.thermostat_wednesday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_wednesday_off_period4')}}"
-          on_off_time_thursday:
-            on_time: "{{states('input_datetime.thermostat_thursday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_thursday_off_period4')}}"
-          on_off_time_friday:
-            on_time: "{{states('input_datetime.thermostat_friday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_friday_off_period4')}}"
-          on_off_time_saturday:
-            on_time: "{{states('input_datetime.thermostat_saturday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_saturday_off_period4')}}"
-          on_off_time_sunday:
-            on_time: "{{states('input_datetime.thermostat_sunday_on_period4')}}"
-            off_time: "{{states('input_datetime.thermostat_sunday_off_period4')}}"
+      - event: HA_MANAGE_HEATER
+        event_data:
+          data:
+            event:
+              eventType: HA_MANAGE_HEATER
+              sender: HUB
+            program: prog4
+            temperature: "{{states('sensor.temperatura')}}"
+            on_off_heater: "{{states('switch.sw_thermostat')}}"
+            target_temp: "{{states('input_number.temperature_period4')}}"
+            on_off_time_monday:
+              on_time: "{{states('input_datetime.thermostat_monday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_monday_off_period4')}}"
+            on_off_time_tuesday:
+              on_time: "{{states('input_datetime.thermostat_tuesday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_tuesday_off_period4')}}"
+            on_off_time_wednesday:
+              on_time: "{{states('input_datetime.thermostat_wednesday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_wednesday_off_period4')}}"
+            on_off_time_thursday:
+              on_time: "{{states('input_datetime.thermostat_thursday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_thursday_off_period4')}}"
+            on_off_time_friday:
+              on_time: "{{states('input_datetime.thermostat_friday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_friday_off_period4')}}"
+            on_off_time_saturday:
+              on_time: "{{states('input_datetime.thermostat_saturday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_saturday_off_period4')}}"
+            on_off_time_sunday:
+              on_time: "{{states('input_datetime.thermostat_sunday_on_period4')}}"
+              off_time: "{{states('input_datetime.thermostat_sunday_off_period4')}}"
 
   - alias: Spegnimento Programma
     trigger:
       - platform: state
         entity_id: input_boolean.heater_program1
-        to: 'off'
+        to: "off"
       - platform: state
         entity_id: input_boolean.heater_program2
-        to: 'off'
+        to: "off"
       - platform: state
         entity_id: input_boolean.heater_program3
-        to: 'off'
+        to: "off"
       - platform: state
         entity_id: input_boolean.heater_program4
-        to: 'off'
+        to: "off"
     action:
       - event: AD_PROGRAM_OFF
+        event_data:
+          program: "{{ trigger.entity_id }}"
 
   - alias: Richiesta assistenza
-    trigger: 
+    trigger:
       - platform: state
         entity_id: input_boolean.assistance_request
-        from: 'off'
-        to: 'on'
-        for: '00:00:10'
+        from: "off"
+        to: "on"
+        for: "00:00:10"
       - platform: event
-        event_type: systemAssistanceOnCommand
+        event_type: HA_ASSSISTANCE_ON
     action:
       - service: mqtt.publish
-        data_template: 
-          topic: 'kairostech/command'
-          payload: 'ASSISTANCE_START'
+        data_template:
+          topic: "kairostech/command"
+          payload: "ASSISTANCE_START"
 
   - alias: Richiesta assistenza FINE
-    trigger: 
+    trigger:
       - platform: state
         entity_id: input_boolean.assistance_request
-        from: 'on'
-        to: 'off'
-        for: '00:00:10'
+        from: "on"
+        to: "off"
+        for: "00:00:10"
       - platform: event
-        event_type: systemAssistanceOffCommand
+        event_type: HA_ASSSISTANCE_OFF
     action:
       - service: mqtt.publish
-        data_template: 
-          topic: 'kairostech/command'
-          payload: 'ASSISTANCE_STOP'
+        data_template:
+          topic: "kairostech/command"
+          payload: "ASSISTANCE_STOP"
 
   - alias: OTA UPDATE CHECK
-    trigger: 
+    trigger:
       - platform: time_pattern
         hours: "/23"
     action:
       - service: mqtt.publish
-        data_template: 
-          topic: 'kairostech/command'
-          payload: 'KAIROSHUB_RELEASE_CHECK' 
-  
+        data_template:
+          topic: "kairostech/command"
+          payload: "KAIROSHUB_RELEASE_CHECK"
+
   - alias: SYNC SETTINGS
     trigger:
       - platform: time
@@ -1388,12 +1437,24 @@ automation:
     action:
       event: "AD_SETTINGS_RESTORE"
   
+  - alias: SYNC NOTIFICATION MESSAGES
+    trigger:
+      - platform: time
+        at: "00:00:00"
+    action:
+      event: "AD_NOTIFICATION_SYNC"
+  
   - alias: RISCALDAMENTO
     trigger:
     action:
       - event: AD_HEATING
-        event_data: 
-            program : prog0
+        event_data:
+          data:
+            program: prog0
+            event:
+              eventType: AD_HEATING
+              sender: HUB
+
   - alias: SPEGNIMENTO RISCALDAMENTO MANUALE
     trigger:
       - platform: numeric_state
@@ -1407,20 +1468,21 @@ automation:
           state: "on"
         - condition: state
           entity_id: input_boolean.heater_program1_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program2_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program3_on
-          state: 'off'
+          state: "off"
         - condition: state
           entity_id: input_boolean.heater_program4_on
-          state: 'off'
+          state: "off"
     action:
       - event: AD_PROGRAM_OFF
         event_data:
           program: prog0
+
   - alias: LOW BATTERY NOTIFICATION
     trigger:
       - platform: numeric_state
@@ -1447,18 +1509,35 @@ automation:
     action:
       - event: AD_KAIROSHUB_NOTIFICATION
         event_data:
-          type: alert
+          type: ALERT
           ncode: HEATING_SENSOR_BATTERY_LOW
-          entity: "{{trigger.entity_id}}
+          entity: "{{ trigger.entity_id }}"
+          sender: "*"
+
+  - alias: SYSTEM EXCHANGE CHECK
+    trigger:
+      - platform: time_pattern
+        minutes: "/20"
+    action:
+      - service: mqtt.publish
+        data_template:
+          topic: "kairostech/command"
+          payload: "KAIROSHUB_SYSTEM_EXCHANGE_CHECK"
+      - delay: "00:00:30"
+      - condition:
+        alias: "checking last update timestamp of a sensor"
+        condition: template
+        value_template: "{{ (as_timestamp(now())-states.sensor.system_exchange_services_last_check.state|float()) > 2400 }}"
+      - service: mqtt.publish
+        data_template:
+          topic: "kairostech/system/exchange_service"
+          payload: "OFFLINE"
+          retain: true
 
 #### logger configuration
 logger:
   default: info
   logs:
-    homeassistant.components.cloud: debug
-    custom_components.hakafka: debug
+    homeassistant.components.cloud: info
+    custom_components.hakafka: info
     custom_components.ha-custom-events: info
-
-shell_command:
-  assistance_start: "python3 ./hakairos-configuration/scripts/assistance_start.py"
-  assistance_stop: "python3 ./hakairos-configuration/scripts/assistance_stop.py"
