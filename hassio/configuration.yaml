@@ -12,14 +12,24 @@ frontend:
   themes: !include_dir_merge_named hakairos-configuration/frontend/community/themes/
 
 lovelace:
-  mode: storage
+  mode: yaml
   resources:
+    - url: /local/button-card/button-card.js
+      type: module
+    - url: /local/clockwork-card/clockwork-card.js
+      type: module
+    - url: /local/kiosk-mode/kiosk-mode.js
+      type: module
+    - url: /local/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /local/simple-thermostat/simple-thermostat.js
+      type: module
+    - url: /local/themes/kairoshub.css
+      type: css
     - url: /local/time-picker-card/time-picker-card.js
       type: module
     - url: /local/weather-card/weather-card.js
       type: module
-    - url: /local/clockwork-card/clockwork-card.js
-      type: js
   dashboards:
     lovelace-kairoshub:
       mode: yaml
