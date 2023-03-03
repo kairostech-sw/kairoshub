@@ -32,6 +32,8 @@ lovelace:
       type: module
     - url: /local/kt-light-entity-card/light-entity-card.js
       type: module
+    - url: /local/logbook-card/logbook-card.js
+      type: module
 
   dashboards:
     lovelace-kairoshub:
