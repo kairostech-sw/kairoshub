@@ -34,6 +34,10 @@ lovelace:
       type: module
     - url: /local/logbook-card/logbook-card.js
       type: module
+    - url: /local/auto-entities/auto-entities.js
+      type: module
+    - url: /local/flex-table-card/flex-table-card.js
+      type: module
 
   dashboards:
     lovelace-kairoshub:
