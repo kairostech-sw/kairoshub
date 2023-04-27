@@ -34,6 +34,10 @@ lovelace:
       type: module
     - url: /local/themes/kairoshub.css
       type: css
+    - url: /local/documentation/marked.js
+      type: module
+    - url: /local/documentation/documentation.js
+      type: module
 
   dashboards:
     lovelace-kairoshub:
