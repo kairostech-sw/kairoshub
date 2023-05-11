@@ -38,6 +38,8 @@ lovelace:
       type: module
     - url: /local/documentation/documentation.js
       type: module
+    - url: /local/integration-info-card/integration-info-card.js
+      type: module
 
   dashboards:
     lovelace-kairoshub:
