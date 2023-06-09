@@ -32,14 +32,16 @@ lovelace:
       type: module
     - url: /local/flex-table-card/flex-table-card.js
       type: module
-    - url: /local/themes/kairoshub.css
-      type: css
     - url: /local/documentation/marked.js
       type: module
     - url: /local/documentation/documentation.js
       type: module
     - url: /local/integration-info-card/integration-info-card.js
       type: module
+    - url: /local/collapsable-card/expander-card.js
+      type: module
+    - url: /local/themes/kairoshub.css
+      type: css
 
   dashboards:
     lovelace-kairoshub:
