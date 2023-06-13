@@ -40,6 +40,8 @@ lovelace:
       type: module
     - url: /local/collapsable-card/expander-card.js
       type: module
+    - url: /local/tabbed-card/tabbed-card.js
+      type: module
     - url: /local/themes/kairoshub.css
       type: css
 
