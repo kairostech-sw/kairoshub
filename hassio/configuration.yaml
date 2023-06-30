@@ -18,8 +18,6 @@ lovelace:
       type: module
     - url: /local/button-card/button-card.js
       type: module
-    - url: /local/lovelace-card-mod/card-mod.js
-      type: module
     - url: /local/time-picker-card/time-picker-card.js
       type: module
     - url: /local/weather-card/weather-card.js
@@ -32,14 +30,22 @@ lovelace:
       type: module
     - url: /local/flex-table-card/flex-table-card.js
       type: module
-    - url: /local/themes/kairoshub.css
-      type: css
+    - url: /local/expander-card/expander-card.js
+      type: module
+    - url: /local/tabbed-card/tabbed-card.kt.js
+      type: module
+    - url: /local/mini-graph-card/mini-graph-card-bundle.js
+      type: module
     - url: /local/documentation/marked.js
       type: module
     - url: /local/documentation/documentation.js
       type: module
     - url: /local/integration-info-card/integration-info-card.js
       type: module
+    - url: /local/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /local/themes/kairoshub.css
+      type: css
 
   dashboards:
     lovelace-kairoshub:
